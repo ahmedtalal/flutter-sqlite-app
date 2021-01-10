@@ -1,0 +1,37 @@
+FutureBuilder (
+        future:  builder.retrieveCourses(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator() ;
+          } else {
+            return ListView.separated(
+              itemCount: snapshot.data.length,
+              separatorBuilder: (context , index) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Divider(color: Colors.blue,thickness: 1.0,),
+              ),
+              itemBuilder: (context , index){
+                var course = Course.fromMap(snapshot.data[index]) ;
+                return ListTile(
+                  title: Text(
+                    '${course.name} - ${course.hour} hours' ,
+                    style: TextStyle(color: Colors.blue , fontSize: 20 , fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    course.content ,
+                    style: TextStyle(fontSize: 17 , color: Colors.blueGrey ,),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete , color: Colors.red, size: 25,),
+                    onPressed: (){
+                      setState(() {
+                        builder.deleteCourse(course.id) ;
+                      });
+                    },
+                  ),
+                );
+              } ,
+            );
+          }
+        },
+      )
